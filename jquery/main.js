@@ -89,4 +89,32 @@ async function getQuestions() {
 	}
 }
 
-getQuestions();
+//getQuestions();
+
+const form = $('.register form');
+
+form.on('submit', async (event) => {
+	event.preventDefault();
+
+	const name = $('#name').val();
+	const email = $('#email').val();
+	const password = $('#password').val();
+
+	const request = await fetch(
+		'https://api.which-one-battle.julienpoirier-webdev.com/api/users',
+		{
+			method: 'POST',
+			body: JSON.stringify({
+				name: name,
+				email: email,
+				password: password,
+			}),
+			headers: {
+				'Content-Type': 'application/json', // MIME TYPE
+			},
+		}
+	);
+
+	const data = await request.json();
+	console.log(data);
+});
