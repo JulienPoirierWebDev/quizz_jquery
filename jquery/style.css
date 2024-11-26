@@ -7,3 +7,7 @@
 h3 span {
 	text-decoration: underline;
 }
+
+.selected {
+	background-color: green;
+}

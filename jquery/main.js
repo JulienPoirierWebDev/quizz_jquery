@@ -25,6 +25,8 @@ fetch('https://api.gameofthronesquotes.xyz/v1/random')
 	});
   */
 
+const userAnswers = Array(10).fill(null);
+
 async function getQuestions() {
 	try {
 		const response = await fetch('https://opentdb.com/api.php?amount=10');
@@ -49,6 +51,38 @@ async function getQuestions() {
 			responses.forEach((response) => {
 				$(`.question-${index}`).append(`<button>${response}</button>`);
 			});
+
+			const buttons = $(`.question-${index} button`);
+			buttons.on('click', (event) => {
+				buttons.removeClass('selected');
+
+				userAnswers[index] = event.target.textContent;
+				event.target.classList.add('selected');
+
+				const isNullInAnswer = userAnswers.includes(null);
+
+				if (isNullInAnswer) {
+					console.log("vous n'avez pas tout fait");
+					$('button[type=submit]').attr('disabled', true);
+				} else {
+					console.log('vous avez terminé');
+					$('button[type=submit]').attr('disabled', false);
+				}
+			});
+		});
+
+		$('.questions').append(
+			"<button type='submit' disabled>Soumettre le quizz</button>"
+		);
+
+		$('button[type=submit]').on('click', (e) => {
+			let score = 0;
+			userAnswers.forEach((oneAnswer, index) => {
+				if (data.results[index].correct_answer === oneAnswer) {
+					score++;
+				}
+			});
+			$('.score').text(`${score}/10`);
 		});
 	} catch (error) {
 		$('.error').text(error);
